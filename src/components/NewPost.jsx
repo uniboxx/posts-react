@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import classes from './NewPost.module.css';
 
-function NewPost({ onClose, onCreateNewPost }) {
+function NewPost({
+  onClose,
+  onCreateNewPost,
+  onUpdatePost,
+  postToUpdate,
+  setPostToUpdate,
+}) {
   const [enteredBody, setEnteredBody] = useState('');
   const [enteredAuthor, setEnteredAuthor] = useState('');
+  // console.log(postToUpdate.body);
 
   function handleChangeBody(event) {
     setEnteredBody(event.target.value);
@@ -19,11 +26,18 @@ function NewPost({ onClose, onCreateNewPost }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+
     const formData = Object.fromEntries(new FormData(e.target));
 
     if (!formData.body || !formData.author) return;
 
-    onCreateNewPost(formData);
+    if (postToUpdate?.$id) {
+      onUpdatePost(postToUpdate.$id, formData);
+      setPostToUpdate(null);
+    } else {
+      onCreateNewPost(formData);
+    }
+
     handleClearFields();
     onClose();
   }
@@ -36,6 +50,7 @@ function NewPost({ onClose, onCreateNewPost }) {
           id="body"
           required
           rows={3}
+          defaultValue={postToUpdate?.body || ''}
           onChange={handleChangeBody}
           name="body"
         />
@@ -47,6 +62,7 @@ function NewPost({ onClose, onCreateNewPost }) {
           id="name"
           name="author"
           required
+          defaultValue={postToUpdate?.author || ''}
           onChange={handleChangeAuthor}
         />
       </p>

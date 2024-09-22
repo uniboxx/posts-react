@@ -5,19 +5,23 @@ import PostsList from './components/PostsList';
 function App() {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  function handleCreatePost() {
-    setModalIsVisible(true);
+  function handleHideModal() {
+    setModalIsVisible(false);
   }
 
-  function handleCloseModal() {
-    setModalIsVisible(false);
+  function handleShowModal() {
+    setModalIsVisible(true);
   }
 
   return (
     <>
-      <MainHeader onCreatePost={handleCreatePost} />
+      <MainHeader onCreatePost={handleShowModal} />
       <main>
-        <PostsList modalIsVisible={modalIsVisible} onClose={handleCloseModal} />
+        <PostsList
+          modalIsVisible={modalIsVisible}
+          onClose={handleHideModal}
+          onShowModal={handleShowModal}
+        />
       </main>
     </>
   );

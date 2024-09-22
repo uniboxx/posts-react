@@ -1,0 +1,30 @@
+.container {
+  padding: 1rem;
+  background-color: #c4a9e4;
+  width: 30rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+  & button {
+    border: none;
+    cursor: pointer;
+    &[name='canc'] {
+      background-color: transparent;
+      padding: 1px 0;
+      border-bottom: 1px solid black;
+    }
+    &[name='ok'] {
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      background-color: #6233b9;
+      color: white;
+      &:hover {
+        background-color: #6233b9aa;
+      }
+    }
+  }
+}

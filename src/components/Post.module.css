@@ -5,7 +5,6 @@
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   animation: animate-in 1s ease-out forwards;
-  cursor: pointer;
 }
 
 .author {
@@ -32,5 +31,31 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+.actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 0.5rem;
+  & button {
+    cursor: pointer;
+    border: none;
+
+    &[name='del'] {
+      background-color: transparent;
+      padding: 0;
+      color: white;
+      border-bottom: 1px solid white;
+    }
+    &[name='edit'] {
+      padding: 2px 6px;
+      background-color: #593884;
+      border-radius: 5px;
+      color: white;
+      &:hover {
+        background-color: #593884aa;
+      }
+    }
   }
 }
