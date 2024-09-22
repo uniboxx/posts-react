@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import classes from './PostsList.module.css';
-import { Client, Databases, ID } from 'appwrite';
+import { Client, Databases, ID, Query } from 'appwrite';
 
 import Modal from './Modal';
 import NewPost from './NewPost';
@@ -19,16 +19,20 @@ const databases = new Databases(client);
 function PostsList({ modalIsVisible, onClose }) {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [isDeletingId, setIsDeletingId] = useState(null);
 
   useEffect(() => {
     async function getPosts() {
       setIsLoading(true);
+      setLoadingMsg('Loading...');
       try {
-        const result = await databases.listDocuments(dbId, collId);
+        const result = await databases.listDocuments(dbId, collId, [
+          Query.orderDesc('$createdAt'),
+        ]);
         // console.log(result);
+        setPosts(result?.documents.reverse());
         setIsLoading(false);
-        setPosts(result?.documents);
       } catch (err) {
         console.error(err.message);
       }
@@ -40,6 +44,7 @@ function PostsList({ modalIsVisible, onClose }) {
     try {
       const id = ID.unique();
       setIsLoading(true);
+      setLoadingMsg('Creating Post...');
       const result = await databases.createDocument(dbId, collId, id, data);
       const newPost = { ...data, $id: id };
       // console.log(result);
@@ -53,6 +58,7 @@ function PostsList({ modalIsVisible, onClose }) {
   async function handleDeletePost(id) {
     try {
       setIsDeletingId(id);
+      setLoadingMsg('Deleting...');
       const result = await databases.deleteDocument(dbId, collId, id);
       setPosts(prev => prev.filter(post => post.$id !== id));
     } catch (err) {
@@ -71,7 +77,7 @@ function PostsList({ modalIsVisible, onClose }) {
       )}
       {isLoading ? (
         <div style={{ textAlign: 'center', color: 'white' }}>
-          <h2>Loading...</h2>
+          <h2>{loadingMsg}</h2>
         </div>
       ) : posts.length ? (
         <ul className={classes.posts}>
@@ -81,7 +87,7 @@ function PostsList({ modalIsVisible, onClose }) {
               author={isDeletingId === post.$id ? '' : post.author}
               onClick={() => handleDeletePost(post.$id)}
             >
-              {isDeletingId === post.$id ? 'Deleting...' : post.body}
+              {isDeletingId === post.$id ? loadingMsg : post.body}
             </Post>
           ))}
         </ul>
