@@ -26,9 +26,9 @@ function PostsList({ modalIsVisible, onClose }) {
       setIsLoading(true);
       try {
         const result = await databases.listDocuments(dbId, collId);
-        // console.log(result.documents);
+        console.log(result);
         setIsLoading(false);
-        setPosts(result?.documents || []);
+        setPosts(result?.documents);
       } catch (err) {
         console.error(err.message);
       }
@@ -39,10 +39,10 @@ function PostsList({ modalIsVisible, onClose }) {
   async function handleCreateNewPost(data) {
     try {
       const id = ID.unique();
-      setIsLoading();
+      setIsLoading(true);
       const result = await databases.createDocument(dbId, collId, id, data);
       const newPost = { ...data, $id: id };
-      // console.log(result);
+      console.log(result);
       setPosts(prev => [newPost, ...prev]);
       setIsLoading(false);
     } catch (err) {
