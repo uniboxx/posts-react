@@ -31,7 +31,7 @@ function PostsList({ modalIsVisible, onClose }) {
           Query.orderDesc('$createdAt'),
         ]);
         // console.log(result);
-        setPosts(result?.documents.reverse());
+        setPosts(result?.documents);
         setIsLoading(false);
       } catch (err) {
         console.error(err.message);
