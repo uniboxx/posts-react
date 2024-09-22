@@ -19,15 +19,16 @@ const databases = new Databases(client);
 function PostsList({ modalIsVisible, onClose }) {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeletingId, setIsDeletingId] = useState(null);
 
   useEffect(() => {
     async function getPosts() {
       setIsLoading(true);
       try {
-        const posts = await databases.listDocuments(dbId, collId);
-        // console.log(posts.documents);
+        const result = await databases.listDocuments(dbId, collId);
+        // console.log(result.documents);
         setIsLoading(false);
-        setPosts(posts.documents);
+        setPosts(result?.documents || []);
       } catch (err) {
         console.error(err.message);
       }
@@ -38,7 +39,7 @@ function PostsList({ modalIsVisible, onClose }) {
   async function handleCreateNewPost(data) {
     try {
       const id = ID.unique();
-      setIsLoading(true);
+      setIsLoading();
       const result = await databases.createDocument(dbId, collId, id, data);
       const newPost = { ...data, $id: id };
       // console.log(result);
@@ -46,6 +47,18 @@ function PostsList({ modalIsVisible, onClose }) {
       setIsLoading(false);
     } catch (err) {
       console.error(err.message);
+    }
+  }
+
+  async function handleDeletePost(id) {
+    try {
+      setIsDeletingId(id);
+      const result = await databases.deleteDocument(dbId, collId, id);
+      setPosts(prev => prev.filter(post => post.$id !== id));
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setIsDeletingId(null);
     }
   }
 
@@ -63,8 +76,12 @@ function PostsList({ modalIsVisible, onClose }) {
       ) : posts.length ? (
         <ul className={classes.posts}>
           {posts.map(post => (
-            <Post key={post.$id} author={post.author}>
-              {post.body}
+            <Post
+              key={post.$id}
+              author={isDeletingId === post.$id ? '' : post.author}
+              onClick={() => handleDeletePost(post.$id)}
+            >
+              {isDeletingId === post.$id ? 'Deleting...' : post.body}
             </Post>
           ))}
         </ul>

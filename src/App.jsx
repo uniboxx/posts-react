@@ -18,7 +18,6 @@ function App() {
       <MainHeader onCreatePost={handleCreatePost} />
       <main>
         <PostsList modalIsVisible={modalIsVisible} onClose={handleCloseModal} />
-        ;
       </main>
     </>
   );

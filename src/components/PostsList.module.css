@@ -8,3 +8,12 @@
   grid-template-columns: repeat(3, 30%);
   justify-content: center;
 }
+
+.deleting {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
