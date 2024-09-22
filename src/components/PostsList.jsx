@@ -26,7 +26,7 @@ function PostsList({ modalIsVisible, onClose }) {
       setIsLoading(true);
       try {
         const result = await databases.listDocuments(dbId, collId);
-        console.log(result);
+        // console.log(result);
         setIsLoading(false);
         setPosts(result?.documents);
       } catch (err) {
@@ -42,7 +42,7 @@ function PostsList({ modalIsVisible, onClose }) {
       setIsLoading(true);
       const result = await databases.createDocument(dbId, collId, id, data);
       const newPost = { ...data, $id: id };
-      console.log(result);
+      // console.log(result);
       setPosts(prev => [newPost, ...prev]);
       setIsLoading(false);
     } catch (err) {
